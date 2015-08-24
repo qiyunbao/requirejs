@@ -256,6 +256,7 @@ var requirejs, require, define;
         }
 
         /**
+         * 将相对路径转化为普通路径，并map到指定地址
          * Given a relative module name, like ./something, normalize it to
          * a real name that can be mapped to a path.
          * @param {String} name the relative name
@@ -292,6 +293,7 @@ var requirejs, require, define;
                     // of IDs. Have to do this here, and not in nameToUrl
                     // because node allows either .js or non .js to map
                     // to same file.
+                    // 过滤掉.js
                     if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
                         name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
                     }
@@ -371,7 +373,7 @@ var requirejs, require, define;
                 });
             }
         }
-
+        // 模块通过paths配置路径
         function hasPathFallback(id) {
             var pathConfig = getOwn(config.paths, id);
             if (pathConfig && isArray(pathConfig) && pathConfig.length > 1) {
@@ -483,7 +485,7 @@ var requirejs, require, define;
                         normalizedName) + suffix
             };
         }
-
+        //获取模块方法，没有就创建
         function getModule(depMap) {
             var id = depMap.id,
                 mod = getOwn(registry, id);
@@ -594,7 +596,7 @@ var requirejs, require, define;
             delete registry[id];
             delete enabledRegistry[id];
         }
-
+        // 依赖循环
         function breakCycle(mod, traced, processed) {
             var id = mod.map.id;
 
@@ -622,7 +624,7 @@ var requirejs, require, define;
                 processed[id] = true;
             }
         }
-
+        // settimeout 检测脚本加载情况
         function checkLoaded() {
             var err, usingPathFallback,
                 waitInterval = config.waitSeconds * 1000,
